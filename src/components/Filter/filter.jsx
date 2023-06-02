@@ -1,5 +1,3 @@
-
-
 import style from 'components/Filter/filter.module.css'
 
 import { useDispatch, useSelector } from "react-redux";
