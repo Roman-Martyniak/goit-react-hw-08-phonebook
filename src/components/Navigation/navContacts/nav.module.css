@@ -1,0 +1,12 @@
+.boxe{
+    display: flex;
+    align-items: center;
+    margin-right: 30px;
+}
+.text{
+    font-size: 25px;
+    margin-left: 120px;
+    margin-right: 15px;
+    color: white;
+
+}
