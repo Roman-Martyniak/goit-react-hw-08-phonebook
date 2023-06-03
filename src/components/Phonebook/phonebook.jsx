@@ -1,8 +1,7 @@
-
 import { nanoid } from 'nanoid';
 import style from 'components/Phonebook/phonebook.module.css'
 import { useState } from 'react';
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addContact } from 'redux/operation/operation';
 import { useMemo } from "react";
 import { fetchContacts } from 'redux/operation/operation';
@@ -12,11 +11,14 @@ import { Navigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
+import { selectFilterdContacts } from 'redux/selectors';
+import { Notify } from 'notiflix';
 
 function Phonebook() {
   const [name, setName] = useState('');
   const [number, setPhone] = useState('');
   const dispatch = useDispatch();
+  const contacts = useSelector(selectFilterdContacts)
 
   const isLogin = useAuth();
 
@@ -45,12 +47,18 @@ function Phonebook() {
     }
   }
 
-  const onAddContact = (contacts) => {
-    const action = addContact(contacts);
-    console.log("contact", contacts);
+  const onAddContact = payload => {
+    const isFindCopyContact = contacts.find(
+      el => el.name.toLocaleLowerCase() === payload.name.toLocaleLowerCase()
+    );
+    if (isFindCopyContact) {
+      Notify.failure(`${payload.name} is in your Contacts`);
+      return;
+    }
+    dispatch(addContact(payload));
+  };
 
-    dispatch(action);
-  }
+
 
 
   const handleSubmit = (evt) => {
@@ -107,7 +115,7 @@ function Phonebook() {
           />
         </div>
 
-        <Button type="submit" variant="outlined" size="small" >Add contact</Button>
+        <Button type="submit" variant="outlined" size="small">Add contact</Button>
       </form>
     </div >
   )
